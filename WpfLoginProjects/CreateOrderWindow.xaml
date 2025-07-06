@@ -1,0 +1,59 @@
+﻿<Window x:Class="WpfLoginProjects.CreateOrderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Create New Order" Height="700" Width="1100" WindowStartupLocation="CenterOwner">
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- CỘT TRÁI: Tìm kiếm và danh sách sản phẩm -->
+        <DockPanel Grid.Column="0" Margin="0,0,15,0">
+            <!-- DÒNG ĐÃ SỬA LỖI -->
+            <!--<TextBlock DockPanel.Dock="Top" Text="1. Find & Add Products" FontSize="18" FontWeight="Bold"/>-->
+
+            <TextBox x:Name="ProductSearchTextBox" DockPanel.Dock="Top" Margin="0,10" FontSize="14" ToolTip="Search by name..."/>
+            <Button x:Name="AddProductButton" Content="Add to Cart" DockPanel.Dock="Bottom" Margin="0,10,0,0" Padding="5" Click="AddProductButton_Click"/>
+            <ListBox x:Name="ProductListBox" DisplayMemberPath="ProductName" Margin="0,5,0,0"/>
+        </DockPanel>
+
+        <!-- CỘT PHẢI: Thông tin đơn hàng và giỏ hàng -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0">
+                <TextBlock Text="2. Select Customer (Optional)" FontSize="18" FontWeight="Bold"/>
+                <ComboBox x:Name="CustomerComboBox" DisplayMemberPath="FullName" Margin="0,10,0,5"/>
+                <TextBlock Text="Leave blank for guest customer." FontStyle="Italic" Foreground="Gray"/>
+            </StackPanel>
+
+            <GroupBox Header="Shopping Cart" Grid.Row="1" Margin="0,20" FontSize="14" FontWeight="SemiBold">
+                <DataGrid x:Name="CartDataGrid" AutoGenerateColumns="False" CanUserAddRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Product" Binding="{Binding ProductName}" Width="*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Qty" Binding="{Binding QuantityInCart}" Width="50"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding SellingPrice, StringFormat=C}" Width="100" IsReadOnly="True"/>
+                        <!-- Thêm nút xóa cho từng sản phẩm trong giỏ hàng -->
+                        <DataGridTemplateColumn Width="Auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Remove" Click="RemoveItem_Click" Tag="{Binding}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <StackPanel Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <TextBlock x:Name="TotalAmountText" Text="Total: $0.00" FontSize="22" FontWeight="Bold" VerticalAlignment="Center"/>
+                <Button x:Name="SaveOrderButton" Content="Save Order" Padding="20,10" Margin="20,0,0,0" FontSize="16" Click="SaveOrderButton_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

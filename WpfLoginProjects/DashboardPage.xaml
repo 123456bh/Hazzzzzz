@@ -1,0 +1,123 @@
+﻿<Page x:Class="WpfLoginProjects.DashboardPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"       
+      xmlns:viewModels="clr-namespace:WpfLoginProjects.ViewModels"      
+      xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+      
+      mc:Ignorable="d"
+      d:DesignHeight="600" 
+      d:DesignWidth="900"
+      
+      d:DataContext="{d:DesignInstance Type=viewModels:DashboardViewModel, IsDesignTimeCreatable=True}"
+      
+      Title="DashboardPage"
+      Background="#F0F2F5">
+
+    <!-- Gán DataContext cho trang -->
+    <Page.DataContext>
+        <viewModels:DashboardViewModel/>
+    </Page.DataContext>
+
+    <Page.Resources>
+        <!-- Style chung cho các ô panel -->
+        <Style TargetType="Border" x:Key="PanelBorderStyle">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="1" Color="#FFD4D4D4" Opacity="0.5" BlurRadius="5"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Style cho tiêu đề của các panel -->
+        <Style TargetType="TextBlock" x:Key="PanelHeaderStyle">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 1. Khu vực các ô KPI -->
+            <ItemsControl Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,20"
+                          ItemsSource="{Binding KpiItems}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="4" Rows="1"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource PanelBorderStyle}" Margin="10,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Icon}" FontFamily="Segoe MDL2 Assets" FontSize="36" VerticalAlignment="Center" Margin="0,0,15,0" Foreground="#007ACC"/>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Title}" FontSize="12" Foreground="Gray"/>
+                                    <TextBlock Text="{Binding Value}" FontSize="18" FontWeight="Bold" Foreground="#333" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- 2. Khu vực Biểu đồ Doanh thu -->
+            <Border Grid.Row="1" Grid.Column="0" Margin="0,0,10,0" Style="{StaticResource PanelBorderStyle}">
+                <StackPanel>
+                    <TextBlock Text="Doanh thu 7 ngày gần nhất" Style="{StaticResource PanelHeaderStyle}"/>
+                    <lvc:CartesianChart Series="{Binding RevenueSeries}" LegendLocation="None" Height="300">
+                        <lvc:CartesianChart.AxisX>
+                            <!-- Chú ý: Trục X phải là một collection -->
+                            <lvc:Axis Title="Ngày" Labels="{Binding RevenueLabels}"/>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <!-- Chú ý: Trục Y phải là một collection -->
+                            <lvc:Axis Title="Doanh thu (VNĐ)" LabelFormatter="{Binding YFormatter}"/>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+                </StackPanel>
+            </Border>
+
+            <!-- 3. Khu vực Top sản phẩm bán chạy -->
+            <Border Grid.Row="1" Grid.Column="1" Margin="10,0,0,0" Style="{StaticResource PanelBorderStyle}">
+                <StackPanel>
+                    <TextBlock Text="Top 5 sản phẩm bán chạy" Style="{StaticResource PanelHeaderStyle}"/>
+                    <ListView ItemsSource="{Binding TopProducts}" BorderThickness="0" Background="Transparent">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="0,5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding ProductName}" VerticalAlignment="Center" ToolTip="{Binding ProductName}" TextTrimming="CharacterEllipsis"/>
+                                    <Border Grid.Column="1" CornerRadius="10" Background="#E0E0E0" MinWidth="30">
+                                        <TextBlock Text="{Binding TotalQuantitySold}" FontWeight="SemiBold" Padding="8,3" TextAlignment="Center"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </ScrollViewer>
+</Page>

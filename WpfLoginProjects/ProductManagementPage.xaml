@@ -1,0 +1,95 @@
+﻿<Page x:Class="WpfLoginProjects.ProductManagementPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WpfLoginProjects"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="950"
+      Title="ProductManagementPage"
+      Loaded="Page_Loaded">
+    <!-- Thêm sự kiện Loaded để tải dữ liệu khi trang được mở -->
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Title -->
+            <RowDefinition Height="*"/>
+            <!-- Content -->
+        </Grid.RowDefinitions>
+
+        <!-- Title -->
+        <TextBlock Text="Product Management" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" Grid.Row="0"/>
+
+        <!-- === THAY ĐỔI LỚN: CHIA GIAO DIỆN LÀM 2 CỘT === -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <!-- Cột cho DataGrid, chiếm 2/3 không gian -->
+                <ColumnDefinition Width="15"/>
+                <!-- Cột đệm -->
+                <ColumnDefinition Width="1*"/>
+                <!-- Cột cho Form chi tiết, chiếm 1/3 không gian -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Cột bên trái: Danh sách sản phẩm -->
+            <Grid Grid.Column="0">
+                <DataGrid x:Name="ProductsDataGrid" 
+                          AutoGenerateColumns="False" 
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
+                          SelectionChanged="ProductsDataGrid_SelectionChanged">
+                    <!-- Sự kiện khi chọn một dòng -->
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Code" Binding="{Binding ProductCode}" Width="80"/>
+                        <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="*"/>
+                        <DataGridTextColumn Header="Category" Binding="{Binding CategoryName}" Width="120"/>
+                        <DataGridTextColumn Header="Selling Price" Binding="{Binding SellingPrice, StringFormat='N2'}" Width="100"/>
+                        <!-- === THÊM MỚI: Cột Cost Price (Giá Nhập) === -->
+                        <DataGridTextColumn Header="Cost Price" Binding="{Binding CostPrice, StringFormat='N2'}" Width="100"/>
+                        <DataGridTextColumn Header="Stock" Binding="{Binding InventoryQuantity}" Width="60"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+
+            <!-- Cột bên phải: Form để Thêm/Sửa sản phẩm -->
+            <Border Grid.Column="2" BorderBrush="LightGray" BorderThickness="1" Padding="15">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="ProductForm">
+                        <TextBlock Text="Product Details" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+
+                        <TextBlock Text="Product Code:" FontWeight="SemiBold"/>
+                        <TextBox x:Name="ProductCodeTextBox" Margin="0,2,0,10"/>
+
+                        <TextBlock Text="Product Name:" FontWeight="SemiBold"/>
+                        <TextBox x:Name="ProductNameTextBox" Margin="0,2,0,10"/>
+
+                        <TextBlock Text="Category:" FontWeight="SemiBold"/>
+                        <!-- ComboBox tốt hơn cho việc chọn Category -->
+                        <ComboBox x:Name="CategoryComboBox" Margin="0,2,0,10" DisplayMemberPath="CategoryName" SelectedValuePath="CategoryID"/>
+
+                        <TextBlock Text="Selling Price:" FontWeight="SemiBold"/>
+                        <TextBox x:Name="SellingPriceTextBox" Margin="0,2,0,10"/>
+
+                        <!-- === THÊM MỚI: Ô nhập cho Cost Price === -->
+                        <TextBlock Text="Cost Price:" FontWeight="SemiBold"/>
+                        <TextBox x:Name="CostPriceTextBox" Margin="0,2,0,10"/>
+
+                        <TextBlock Text="Inventory Quantity:" FontWeight="SemiBold"/>
+                        <TextBox x:Name="InventoryQuantityTextBox" Margin="0,2,0,10"/>
+
+                        <TextBlock Text="Description:" FontWeight="SemiBold"/>
+                        <TextBox x:Name="DescriptionTextBox" Margin="0,2,0,15" Height="60" TextWrapping="Wrap" AcceptsReturn="True"/>
+
+                        <!-- Các nút hành động cho Form -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button x:Name="ClearButton" Content="Clear" Margin="0,0,10,0" Padding="15,5" Click="ClearButton_Click"/>
+                            <Button x:Name="DeleteButton" Content="Delete" Margin="0,0,10,0" Padding="15,5" Background="IndianRed" Foreground="White" Click="DeleteButton_Click"/>
+                            <Button x:Name="SaveButton" Content="Save" Padding="20,5" FontWeight="Bold" Background="DodgerBlue" Foreground="White" Click="SaveButton_Click"/>
+                        </StackPanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>
