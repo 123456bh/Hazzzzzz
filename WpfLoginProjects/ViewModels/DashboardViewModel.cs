@@ -70,10 +70,10 @@ namespace WpfLoginProjects.ViewModels
         private void LoadSampleDataForDesigner()
         {
             // Dữ liệu giả cho KPI
-            KpiItems.Add(new KpiItem { Title = "Tổng Doanh Thu", Value = "123,456,789 VNĐ", Icon = "" });
-            KpiItems.Add(new KpiItem { Title = "Doanh Thu Tháng Này", Value = "12,345,678 VNĐ", Icon = "" });
-            KpiItems.Add(new KpiItem { Title = "Tổng Đơn Hàng", Value = "1,234", Icon = "" });
-            KpiItems.Add(new KpiItem { Title = "Tổng Khách Hàng", Value = "567", Icon = "" });
+            KpiItems.Add(new KpiItem { Title = "Total Revenue", Value = "123,456,789 VNĐ", Icon = "" });
+            KpiItems.Add(new KpiItem { Title = "This Month's Revenue", Value = "12,345,678 VNĐ", Icon = "" });
+            KpiItems.Add(new KpiItem { Title = "Total Order", Value = "1,234", Icon = "" });
+            KpiItems.Add(new KpiItem { Title = "Total Customers", Value = "567", Icon = "" });
 
             // Dữ liệu giả cho Top Products
             TopProducts.Add(new TopSellingProduct { ProductName = "iPhone 15 Pro Max (Sample)", TotalQuantitySold = 150 });
@@ -118,10 +118,10 @@ namespace WpfLoginProjects.ViewModels
 
             if (kpisData != null)
             {
-                KpiItems.Add(new KpiItem { Title = "Tổng Doanh Thu", Value = kpisData.TotalRevenue.ToString("N0") + " VNĐ", Icon = "" });
-                KpiItems.Add(new KpiItem { Title = "Doanh Thu Tháng Này", Value = kpisData.MonthlyRevenue.ToString("N0") + " VNĐ", Icon = "" });
-                KpiItems.Add(new KpiItem { Title = "Tổng Đơn Hàng", Value = kpisData.TotalSales.ToString(), Icon = "" });
-                KpiItems.Add(new KpiItem { Title = "Tổng Khách Hàng", Value = kpisData.TotalCustomers.ToString(), Icon = "" });
+                KpiItems.Add(new KpiItem { Title = "Total Revenue", Value = kpisData.TotalRevenue.ToString("N0") + " VNĐ", Icon = "" });
+                KpiItems.Add(new KpiItem { Title = "This Month's Revenue", Value = kpisData.MonthlyRevenue.ToString("N0") + " VNĐ", Icon = "" });
+                KpiItems.Add(new KpiItem { Title = "Total Order", Value = kpisData.TotalSales.ToString(), Icon = "" });
+                KpiItems.Add(new KpiItem { Title = "Total Customers", Value = kpisData.TotalCustomers.ToString(), Icon = "" });
             }
         }
 

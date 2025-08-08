@@ -29,10 +29,51 @@ namespace WpfLoginProjects
         private Category _selectedCategory;
         private bool _isNewCategoryMode = false;
 
-        public CategoryManagementPage()
+        // **THAY ĐỔI 1: Thêm thuộc tính để lưu thông tin người dùng đăng nhập**
+        public Employee LoggedInEmployee { get; private set; }
+
+        // **THAY ĐỔI 2: Sửa Constructor để nhận vào đối tượng Employee**
+        public CategoryManagementPage(Employee employee)
         {
             InitializeComponent();
+            _dbService = new DatabaseService();
+
+            // Lưu lại thông tin người dùng
+            this.LoggedInEmployee = employee;
+            SetupPermissions();
             LoadCategories();
+        }
+
+        // **THAY ĐỔI 3: Thêm hàm mới để phân quyền chi tiết trên trang**
+        private void SetupPermissions()
+        {
+            if (LoggedInEmployee == null || string.IsNullOrEmpty(LoggedInEmployee.RoleName))
+            {
+                SetControlsEnabled(false);
+                return;
+            }
+
+            string roleName = LoggedInEmployee.RoleName.ToLower();
+
+            // Theo quy tắc, chỉ Admin và Warehouse được quản lý danh mục sản phẩm
+            if (roleName == "admin" || roleName == "warehouse")
+            {
+                SetControlsEnabled(true);
+            }
+            else // Các vai trò khác như Sales chỉ được xem
+            {
+                SetControlsEnabled(false);
+            }
+        }
+
+        // **THAY ĐỔI 4: Tạo hàm tiện ích để bật/tắt các control**
+        private void SetControlsEnabled(bool isEnabled)
+        {
+            // Giả sử các nút và textbox của bạn có tên như sau trong XAML
+            btnAddNew.IsEnabled = isEnabled;
+            btnSave.IsEnabled = isEnabled;
+            btnDelete.IsEnabled = isEnabled;
+            txtCategoryName.IsEnabled = isEnabled;
         }
 
         private void LoadCategories()

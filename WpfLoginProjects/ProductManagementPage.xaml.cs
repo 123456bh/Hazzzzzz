@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfLoginProjects.Models;
 using WpfLoginProjects.Services;
 
 namespace WpfLoginProjects
@@ -21,17 +22,72 @@ namespace WpfLoginProjects
     public partial class ProductManagementPage : Page
     {
         private readonly DatabaseService _databaseService;
-        public ProductManagementPage()
+        public Employee LoggedInEmployee { get; private set; }
+        public ProductManagementPage(Employee employee)
         {
             InitializeComponent();
             _databaseService = new DatabaseService();
+
+            // Lưu lại thông tin người dùng
+            this.LoggedInEmployee = employee;
         }
 
         // Sự kiện được gọi khi trang được tải lần đầu
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            // **THAY ĐỔI 3: Gọi hàm phân quyền TRƯỚC khi tải dữ liệu**
+            SetupPermissions();
+
             LoadProducts();
             LoadCategories();
+        }
+
+        // **THAY ĐỔI 4: Thêm hàm mới để phân quyền chi tiết trên trang**
+        private void SetupPermissions()
+        {
+            // Mặc định an toàn: nếu không có thông tin người dùng, khóa hết
+            if (LoggedInEmployee == null || string.IsNullOrEmpty(LoggedInEmployee.RoleName))
+            {
+                SetControlsEnabled(false);
+                return;
+            }
+
+            string roleName = LoggedInEmployee.RoleName.ToLower();
+
+            // Admin và Warehouse có toàn quyền, Sales chỉ được xem
+            if (roleName == "admin" || roleName == "warehouse")
+            {
+                SetControlsEnabled(true);
+            }
+            else // Bao gồm cả Sales và các vai trò khác
+            {
+                SetControlsEnabled(false);
+            }
+        }
+
+        // **THAY ĐỔI 5: Tạo hàm tiện ích để bật/tắt các control**
+        private void SetControlsEnabled(bool isEnabled)
+        {
+            // Bật/tắt các nút hành động
+            SaveButton.IsEnabled = isEnabled;
+            DeleteButton.IsEnabled = isEnabled;
+
+            // Bật/tắt các ô nhập liệu
+            ProductCodeTextBox.IsEnabled = isEnabled;
+            ProductNameTextBox.IsEnabled = isEnabled;
+            CategoryComboBox.IsEnabled = isEnabled;
+            SellingPriceTextBox.IsEnabled = isEnabled;
+            CostPriceTextBox.IsEnabled = isEnabled;
+            InventoryQuantityTextBox.IsEnabled = isEnabled;
+            DescriptionTextBox.IsEnabled = isEnabled;
+
+            // Nếu bị tắt, thêm tooltip để giải thích cho người dùng
+            if (!isEnabled)
+            {
+                string toolTipMessage = "You do not have permission to modify products.";
+                SaveButton.ToolTip = toolTipMessage;
+                DeleteButton.ToolTip = toolTipMessage;
+            }
         }
 
         private void LoadProducts()

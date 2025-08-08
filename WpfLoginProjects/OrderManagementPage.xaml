@@ -6,24 +6,37 @@
       xmlns:local="clr-namespace:WpfLoginProjects"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="OrderManagementPage">
+      Title="OrderManagementPage"
+      Loaded="Page_Loaded">
     <Grid Margin="15">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <!-- Dòng mới cho các điều khiển lọc -->
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Order Management" FontSize="24" FontWeight="Bold" Margin="0,0,0,20" Grid.Row="0"/>
 
-        <!-- THÊM THUỘC TÍNH MOUSE DOUBLE CLICK VÀO ĐÂY -->
+        <TextBlock Text="Order Management" FontSize="24" FontWeight="Bold" Margin="0,0,0,10" Grid.Row="0"/>
+
+        <!-- VÙNG ĐIỀU KHIỂN LỌC -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+            <Label Content="Filter by date:" VerticalAlignment="Center"/>
+            <DatePicker x:Name="FilterDatePicker" Width="150" VerticalAlignment="Center"/>
+            <Button x:Name="FilterButton" Content="Filter" Width="80" Margin="10,0,0,0" Click="FilterButton_Click"/>
+            <Button x:Name="ClearFilterButton" Content="Clear Filter" Width="100" Margin="5,0,0,0" Click="ClearFilterButton_Click"/>
+        </StackPanel>
+
+        <!-- DataGrid được đẩy xuống Grid.Row="2" -->
         <DataGrid x:Name="OrdersDataGrid" 
-                  Grid.Row="1" 
+                  Grid.Row="2" 
                   AutoGenerateColumns="False" 
                   IsReadOnly="True"
                   MouseDoubleClick="OrdersDataGrid_MouseDoubleClick">
-
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Order ID" Binding="{Binding OrderID}" Width="80"/>
-                <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate, StringFormat='g'}" Width="150"/>
+                <!-- Đổi cột OrderDate thành DataGridTemplateColumn để có thể tùy chỉnh nếu cần -->
+                <!-- Hoặc giữ nguyên DataGridTextColumn nếu chỉ cần hiển thị -->
+                <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate, StringFormat='dd/MM/yyyy HH:mm'}" Width="150"/>
                 <DataGridTextColumn Header="Customer" Binding="{Binding CustomerName}" Width="*"/>
                 <DataGridTextColumn Header="Employee" Binding="{Binding EmployeeName}" Width="*"/>
                 <DataGridTextColumn Header="Status" Binding="{Binding OrderStatus}" Width="120"/>

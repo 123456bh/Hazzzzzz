@@ -82,15 +82,15 @@
             <!-- 2. Khu vực Biểu đồ Doanh thu -->
             <Border Grid.Row="1" Grid.Column="0" Margin="0,0,10,0" Style="{StaticResource PanelBorderStyle}">
                 <StackPanel>
-                    <TextBlock Text="Doanh thu 7 ngày gần nhất" Style="{StaticResource PanelHeaderStyle}"/>
+                    <TextBlock Text="Revenue last 7 days" Style="{StaticResource PanelHeaderStyle}"/>
                     <lvc:CartesianChart Series="{Binding RevenueSeries}" LegendLocation="None" Height="300">
                         <lvc:CartesianChart.AxisX>
                             <!-- Chú ý: Trục X phải là một collection -->
-                            <lvc:Axis Title="Ngày" Labels="{Binding RevenueLabels}"/>
+                            <lvc:Axis Title="Day" Labels="{Binding RevenueLabels}"/>
                         </lvc:CartesianChart.AxisX>
                         <lvc:CartesianChart.AxisY>
                             <!-- Chú ý: Trục Y phải là một collection -->
-                            <lvc:Axis Title="Doanh thu (VNĐ)" LabelFormatter="{Binding YFormatter}"/>
+                            <lvc:Axis Title="Revenue (VNĐ)" LabelFormatter="{Binding YFormatter}"/>
                         </lvc:CartesianChart.AxisY>
                     </lvc:CartesianChart>
                 </StackPanel>
@@ -99,7 +99,7 @@
             <!-- 3. Khu vực Top sản phẩm bán chạy -->
             <Border Grid.Row="1" Grid.Column="1" Margin="10,0,0,0" Style="{StaticResource PanelBorderStyle}">
                 <StackPanel>
-                    <TextBlock Text="Top 5 sản phẩm bán chạy" Style="{StaticResource PanelHeaderStyle}"/>
+                    <TextBlock Text="Top 5 best selling products" Style="{StaticResource PanelHeaderStyle}"/>
                     <ListView ItemsSource="{Binding TopProducts}" BorderThickness="0" Background="Transparent">
                         <ListView.ItemTemplate>
                             <DataTemplate>

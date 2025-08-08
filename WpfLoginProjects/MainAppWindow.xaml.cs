@@ -20,26 +20,79 @@ namespace WpfLoginProjects
     /// </summary>
     public partial class MainAppWindow : Window
     {
-        private readonly Employee _loggedInEmployee;
+        // Đổi tên biến để rõ ràng hơn, đây là thông tin của người dùng đã đăng nhập
+        public Employee LoggedInEmployee { get; private set; }
+
         public MainAppWindow(Employee employee)
         {
             InitializeComponent();
 
-            _loggedInEmployee = employee;
-            UserInfoText.Text = $"Welcome, {_loggedInEmployee.FullName}!";
+            LoggedInEmployee = employee;
+            WelcomeMessageText.Text = $"Welcome, {LoggedInEmployee.FullName} ({LoggedInEmployee.RoleName})!";
+
+            // *** BƯỚC QUAN TRỌNG: Thiết lập giao diện dựa trên vai trò ***
+            SetupUIVisibilityByRole();
 
             // Khi cửa sổ chính được mở, hãy mặc định hiển thị trang sản phẩm
             MainFrame.Navigate(new DashboardPage());
         }
-       
+
+        // *** HÀM MỚI: Logic để ẩn/hiện các thành phần giao diện ***
+        private void SetupUIVisibilityByRole()
+        {
+            // Kiểm tra xem thông tin vai trò có hợp lệ không
+            if (LoggedInEmployee == null || string.IsNullOrEmpty(LoggedInEmployee.RoleName))
+            {
+                // Nếu không có vai trò, ẩn hết các chức năng nhạy cảm để đảm bảo an toàn
+                MenuCustomers.Visibility = Visibility.Collapsed;
+                MenuOrders.Visibility = Visibility.Collapsed;
+                MenuEmployees.Visibility = Visibility.Collapsed;
+                MenuRoles.Visibility = Visibility.Collapsed;
+                MenuCreateOrder.Visibility = Visibility.Collapsed; // Giả sử MenuItem tạo đơn hàng có tên là MenuCreateOrder
+                return;
+            }
+
+            string roleName = LoggedInEmployee.RoleName.ToLower();
+
+            // Sử dụng switch-case để quản lý quyền cho từng vai trò
+            switch (roleName)
+            {
+                case "admin":
+                    // Admin có toàn quyền, không cần ẩn gì.
+                    break;
+
+                case "sales":
+                    // Vai trò Sales: Ẩn các chức năng quản lý nhân sự và vai trò
+                    MenuEmployees.Visibility = Visibility.Collapsed;
+                    MenuRoles.Visibility = Visibility.Collapsed;
+                    MenuCreateOrder.Visibility = Visibility.Collapsed;
+                    break;
+
+                case "warehouse":
+                    // Vai trò Warehouse: Chỉ quản lý sản phẩm, ẩn các chức năng liên quan đến bán hàng và khách hàng
+                    MenuCreateOrder.Visibility = Visibility.Collapsed;
+                    MenuCustomers.Visibility = Visibility.Collapsed;
+                    MenuOrders.Visibility = Visibility.Collapsed;
+                    MenuEmployees.Visibility = Visibility.Collapsed;
+                    MenuRoles.Visibility = Visibility.Collapsed;
+                    break;
+
+                default:
+                    // Mặc định cho các vai trò khác (nếu có): ẩn các chức năng nhạy cảm
+                    MenuEmployees.Visibility = Visibility.Collapsed;
+                    MenuRoles.Visibility = Visibility.Collapsed;
+                    break;
+            }
+        }
+
         private void ProductMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new ProductManagementPage());
+            MainFrame.Navigate(new ProductManagementPage(LoggedInEmployee));
         }
         
         private void CustomerMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new CustomerManagementPage());
+            MainFrame.Navigate(new CustomerManagementPage(LoggedInEmployee));
         }
         
         private void OrderMenuItem_Click(object sender, RoutedEventArgs e)
@@ -54,7 +107,7 @@ namespace WpfLoginProjects
        
         private void CategoryMenuItem_Click(object sender, RoutedEventArgs e)
         {            
-            MainFrame.Navigate(new CategoryManagementPage());
+            MainFrame.Navigate(new CategoryManagementPage(LoggedInEmployee));
         }
        
         private void RoleMenuItem_Click(object sender, RoutedEventArgs e)
@@ -64,14 +117,14 @@ namespace WpfLoginProjects
 
         private void CreateOrderMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (_loggedInEmployee == null)
+            if (LoggedInEmployee == null)
             {
                 MessageBox.Show("Cannot create order. User information is missing.", "Error");
                 return;
             }
 
             // Mở cửa sổ tạo đơn hàng và truyền thông tin nhân viên hiện tại vào
-            CreateOrderWindow createOrderWindow = new CreateOrderWindow(_loggedInEmployee);
+            CreateOrderWindow createOrderWindow = new CreateOrderWindow(LoggedInEmployee);
             createOrderWindow.Owner = this; // Đặt cửa sổ chính làm chủ
 
             // ShowDialog sẽ đợi cho đến khi cửa sổ tạo đơn hàng được đóng
@@ -84,7 +137,8 @@ namespace WpfLoginProjects
                 // Nếu đang ở trang Orders, hãy tải lại nó
                 if (MainFrame.Content is OrderManagementPage orderPage)
                 {
-                    MainFrame.Navigate(new OrderManagementPage());
+                    MainFrame.Navigate(new OrderManagementPage(
+                        ));
                 }
             }
         }

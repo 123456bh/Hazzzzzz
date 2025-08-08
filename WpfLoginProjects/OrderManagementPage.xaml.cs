@@ -22,37 +22,72 @@ namespace WpfLoginProjects
     public partial class OrderManagementPage : Page
     {
         private readonly DatabaseService _databaseService;
+        // 1. TẠO MỘT BIẾN ĐỂ LƯU TRỮ TOÀN BỘ DANH SÁCH ĐƠN HÀNG
+        private List<OrderSummary> _allOrderSummaries;
 
         public OrderManagementPage()
         {
             InitializeComponent();
             _databaseService = new DatabaseService();
-            LoadOrders();
+            // Chúng ta sẽ gọi LoadOrders từ sự kiện 'Loaded' của Page để đảm bảo UI đã sẵn sàng
         }
 
-        private void LoadOrders()
+        // Sử dụng sự kiện Loaded của Page để tải dữ liệu (thêm Loaded="Page_Loaded" vào XAML)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            OrdersDataGrid.ItemsSource = _databaseService.GetOrderSummaries();
+            LoadAllOrders();
         }
 
-        // HÀM MỚI ĐỂ XỬ LÝ SỰ KIỆN NHÁY ĐÚP CHUỘT
-        private void OrdersDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        // Đổi tên hàm để rõ nghĩa hơn: Tải tất cả đơn hàng một lần
+        private void LoadAllOrders()
         {
-            // Kiểm tra xem người dùng có thực sự click vào một dòng có dữ liệu hay không
-            if (OrdersDataGrid.SelectedItem is OrderSummary selectedOrder)
+            // Lấy dữ liệu từ database và LƯU vào danh sách đầy đủ của chúng ta
+            _allOrderSummaries = _databaseService.GetOrderSummaries();
+
+            // Hiển thị danh sách đầy đủ lên DataGrid
+            OrdersDataGrid.ItemsSource = _allOrderSummaries;
+        }
+
+        // 2. HÀM XỬ LÝ SỰ KIỆN CLICK NÚT "LỌC"
+        private void FilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (FilterDatePicker.SelectedDate.HasValue)
             {
-                // 1. Tạo một cửa sổ chi tiết đơn hàng mới, truyền đối tượng đơn hàng đã chọn vào
-                OrderDetailsWindow detailsWindow = new OrderDetailsWindow(selectedOrder);
+                DateTime selectedDate = FilterDatePicker.SelectedDate.Value;
 
-                // 2. (Tùy chọn nhưng nên có) Đặt cửa sổ chính làm chủ của cửa sổ pop-up.
-                // Điều này giúp cửa sổ pop-up luôn nằm trên cửa sổ chính.
-                detailsWindow.Owner = Window.GetWindow(this);
+                // Lọc trên danh sách đầy đủ (_allOrderSummaries), không phải trên DataGrid
+                // So sánh .Date để chỉ lấy phần ngày, bỏ qua giờ/phút/giây
+                var filteredList = _allOrderSummaries
+                                    .Where(order => order.OrderDate.Date == selectedDate.Date)
+                                    .ToList();
 
-                // 3. Hiển thị cửa sổ chi tiết. 
-                // ShowDialog() sẽ khóa cửa sổ chính lại cho đến khi cửa sổ chi tiết được đóng.
-                detailsWindow.ShowDialog();
+                // Cập nhật DataGrid với kết quả đã lọc
+                OrdersDataGrid.ItemsSource = filteredList;
+            }
+            else
+            {
+                MessageBox.Show("Please select a date to filter.", "Notification");
             }
         }
 
+        // 3. HÀM XỬ LÝ SỰ KIỆN CLICK NÚT "XÓA BỘ LỌC"
+        private void ClearFilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Hiển thị lại danh sách đầy đủ ban đầu
+            OrdersDataGrid.ItemsSource = _allOrderSummaries;
+            // Xóa ngày đã chọn trong DatePicker
+            FilterDatePicker.SelectedDate = null;
+        }
+
+        // Hàm xử lý sự kiện nháy đúp chuột của bạn (giữ nguyên)
+        private void OrdersDataGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (OrdersDataGrid.SelectedItem is OrderSummary selectedOrder)
+            {
+                OrderDetailsWindow detailsWindow = new OrderDetailsWindow(selectedOrder);
+                detailsWindow.Owner = Window.GetWindow(this);
+                detailsWindow.ShowDialog();
+            }
+        }
     }
 }

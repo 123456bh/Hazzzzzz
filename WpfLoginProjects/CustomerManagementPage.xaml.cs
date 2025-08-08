@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using WpfLoginProjects.Models;
 using WpfLoginProjects.Services;
 
 namespace WpfLoginProjects
@@ -26,10 +27,62 @@ namespace WpfLoginProjects
         private Customer _selectedCustomer;
         private bool _isNewCustomerMode = false;
 
-        public CustomerManagementPage()
+        // **THAY ĐỔI 1: Thêm thuộc tính để lưu thông tin người dùng đăng nhập**
+        public Employee LoggedInEmployee { get; private set; }
+
+        public CustomerManagementPage(Employee employee)
         {
             InitializeComponent();
+            _dbService = new DatabaseService();
+
+            // Lưu lại thông tin người dùng
+            this.LoggedInEmployee = employee;
+
+            this.Loaded += Page_Loaded;
+        }
+
+        public void Page_Loaded (object sender, RoutedEventArgs e)
+        {
+            SetupPermissions();
             LoadCustomers();
+        }
+
+        // **THAY ĐỔI 3: Thêm hàm mới để phân quyền chi tiết trên trang**
+        private void SetupPermissions()
+        {
+            if (LoggedInEmployee == null || string.IsNullOrEmpty(LoggedInEmployee.RoleName))
+            {
+                SetControlsEnabled(false);
+                return;
+            }
+
+            string roleName = LoggedInEmployee.RoleName.ToLower();
+
+            // Theo quy tắc, chỉ Admin và Sales được quản lý khách hàng
+            if (roleName == "admin" || roleName == "sales")
+            {
+                SetControlsEnabled(true);
+            }
+            else // Các vai trò khác như Warehouse không có quyền
+            {
+                SetControlsEnabled(false);
+            }
+        }
+
+        // **THAY ĐỔI 4: Tạo hàm tiện ích để bật/tắt các control**
+        private void SetControlsEnabled(bool isEnabled)
+        {
+            // Giả sử các nút và button của bạn có tên như sau trong XAML
+            btnAddNew.IsEnabled = isEnabled; // Nút Add New
+            btnSave.IsEnabled = isEnabled;   // Nút Save
+            btnDelete.IsEnabled = isEnabled; // Nút Delete
+
+            // Vô hiệu hóa cả các ô nhập liệu
+            txtFullName.IsEnabled = isEnabled;
+            txtPhoneNumber.IsEnabled = isEnabled;
+            txtEmail.IsEnabled = isEnabled;
+            txtAddress.IsEnabled = isEnabled;
+            txtCustomerCode.IsEnabled = isEnabled;
         }
 
         private void LoadCustomers()

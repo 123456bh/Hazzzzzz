@@ -13,7 +13,8 @@
         <Menu DockPanel.Dock="Top" FontSize="14">
             <!-- MỤC MỚI: Menu cho các chức năng chính -->
             <MenuItem Header="_Actions">
-                <MenuItem Header="_Create New Order" 
+                <MenuItem x:Name="MenuCreateOrder"
+                          Header="_Create New Order" 
                           Click="CreateOrderMenuItem_Click" 
                           FontWeight="Bold">
                     <MenuItem.Icon>
@@ -23,14 +24,15 @@
             </MenuItem>
 
             <MenuItem Header="_Management">
-                <MenuItem Header="_Products" Click="ProductMenuItem_Click"/>
-                <MenuItem Header="_Categories" Click="CategoryMenuItem_Click"/>
+                <MenuItem x:Name="MenuProducts" Header="_Products" Click="ProductMenuItem_Click"/>
+                <MenuItem x:Name="MenuCategories" Header="_Categories" Click="CategoryMenuItem_Click"/>
                 <Separator/>
-                <MenuItem Header="_Customers" Click="CustomerMenuItem_Click"/>
-                <MenuItem Header="_Orders" Click="OrderMenuItem_Click"/>
+                <!-- Đặt tên cho các MenuItem cần phân quyền -->
+                <MenuItem x:Name="MenuCustomers" Header="_Customers" Click="CustomerMenuItem_Click"/>
+                <MenuItem x:Name="MenuOrders" Header="_Orders" Click="OrderMenuItem_Click"/>
                 <Separator/>
-                <MenuItem Header="_Employees" Click="EmployeeMenuItem_Click"/>
-                <MenuItem Header="_Roles" Click="RoleMenuItem_Click"/>
+                <MenuItem x:Name="MenuEmployees" Header="_Employees" Click="EmployeeMenuItem_Click"/>
+                <MenuItem x:Name="MenuRoles" Header="_Roles" Click="RoleMenuItem_Click"/>
             </MenuItem>
 
             <!-- MỤC MỚI: Menu cho báo cáo -->
@@ -53,7 +55,7 @@
         <!-- Thanh trạng thái, nằm ở dưới cùng -->
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock x:Name="UserInfoText" Text="Ready"/>
+                <TextBlock x:Name="WelcomeMessageText" Text="Ready"/>
             </StatusBarItem>
         </StatusBar>
 
