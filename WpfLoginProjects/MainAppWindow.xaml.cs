@@ -65,7 +65,7 @@ namespace WpfLoginProjects
                     // Vai trò Sales: Ẩn các chức năng quản lý nhân sự và vai trò
                     MenuEmployees.Visibility = Visibility.Collapsed;
                     MenuRoles.Visibility = Visibility.Collapsed;
-                    MenuCreateOrder.Visibility = Visibility.Collapsed;
+                    //MenuCreateOrder.Visibility = Visibility.Collapsed;
                     break;
 
                 case "warehouse":

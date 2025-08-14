@@ -33,6 +33,7 @@
                 <Separator/>
                 <MenuItem x:Name="MenuEmployees" Header="_Employees" Click="EmployeeMenuItem_Click"/>
                 <MenuItem x:Name="MenuRoles" Header="_Roles" Click="RoleMenuItem_Click"/>
+                
             </MenuItem>
 
             <!-- MỤC MỚI: Menu cho báo cáo -->
