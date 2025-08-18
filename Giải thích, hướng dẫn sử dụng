@@ -1,98 +1,88 @@
-Các tính năng của các role trong chương trình chạy Visual Studio
-1. Vai trò: Admin (Quản trị viên)
-Là vai trò tối cao, Admin có quyền truy cập và thao tác đầy đủ trên tất cả các giao diện của hệ
-thống.
-• Form: Main App Window (Cửa sổ chính)
-  o Khi đăng nhập với vai trò Admin, không có bất kỳ menu chức năng nào bị ẩn. Người
-  dùng có thể thấy và truy cập vào tất cả các mô-đun từ thanh menu.
-  o Toàn bộ các mục menu như "Dashboard", "Bán hàng", "Quản lý Sản phẩm", "Quản lý
-  Khách hàng", "Quản lý Đơn hàng", "Quản lý Nhân viên", "Quản lý Vai trò" đều hiển
-  thị và hoạt động.
-• Form: Dashboard Page (Trang Bảng điều khiển)
-  o Admin có quyền xem toàn bộ dữ liệu tổng hợp.
-  o Xem được tất cả 4 ô chỉ số KPI, biểu đồ doanh thu 7 ngày, và danh sách 5 sản phẩm
-  bán chạy nhất.
-• Form: Product Management Page (Trang Quản lý Sản phẩm)
-  o Logic trong code (SetupPermissions) xác định roleName là "admin" và cấp toàn
-  quyền.
-  o Chi tiết:
-    ▪ Xem: Tải và xem toàn bộ danh sách sản phẩm trong DataGrid.
-    ▪ Thêm/Sửa: Tất cả các ô nhập liệu (Mã SP, Tên SP, Giá bán, Giá vốn, Tồn kho, Mô
-    tả, Danh mục) đều ở trạng thái cho phép nhập liệu.
-    ▪ Hành động: Các nút "Lưu" (Save), "Xóa" (Delete), "Làm mới" (Clear) đều hoạt
-    động, cho phép thực hiện đầy đủ các thao tác Thêm, Sửa, Xóa.
-• Form: Category Management Page (Trang Quản lý Danh mục)
-  o Tương tự trang sản phẩm, Admin có toàn quyền quản lý.
-  o Có thể Xem, Thêm mới, Sửa tên và Xóa các danh mục sản phẩm.
-• Form: Customer Management Page (Trang Quản lý Khách hàng)
-  o Logic phân quyền cho phép Admin thực hiện mọi thao tác.
-  o toàn quyền Xem, Thêm, Sửa, Xóa thông tin của mọi khách hàng trong hệ thống.
-• Form: Create Order Window (Cửa sổ Tạo đơn hàng)
-  o Có thể truy cập từ menu và thực hiện đầy đủ chức năng bán hàng.
-  o Tìm kiếm sản phẩm, thêm sản phẩm vào giỏ hàng, chọn khách hàng từ danh sách
-  (hoặc bỏ trống cho khách lẻ), và nhấn "Lưu" để hoàn tất đơn hàng.
-• Form: Order Management Page (Trang Quản lý Đơn hàng)
-  o Truy cập và xem toàn bộ lịch sử giao dịch của hệ thống.
-  o Xem danh sách tất cả đơn hàng, sử dụng bộ lọc theo ngày, và nhấn đúp chuột vào
-  một đơn hàng để mở cửa sổ "Chi tiết đơn hàng".
-• Form: Employee Management Page (Trang Quản lý Nhân viên)
-  o Đây là chức năng đặc quyền của Admin, cho phép quản lý toàn bộ tài khoản người
-  dùng.
-  o Chi tiết:
-    ▪ Xem: Thấy danh sách tất cả nhân viên và vai trò tương ứng.
-    ▪ Thêm: Tạo tài khoản nhân viên mới với mật khẩu mặc định.
-    ▪ Sửa: Chỉnh sửa mọi thông tin của nhân viên, quan trọng nhất là có thể thay đổi
-    vai trò (phân quyền lại) cho họ.
-    ▪ Xóa: Xóa tài khoản nhân viên khỏi hệ thống.
-• Form: Role Management Page (Trang Quản lý Vai trò)
-  o Giao diện này mang tính tham khảo, liệt kê các vai trò đã được định nghĩa sẵn.
-  o Chỉ có chức năng Xem danh sách các vai trò (Admin, Sales, Warehouse).
-2. Vai trò: Sales (Nhân viên Bán hàng)
-Vai trò này tập trung vào nghiệp vụ bán hàng, do đó quyền hạn được cấp tối đa cho các form
-liên quan và hạn chế trên các form quản trị nội bộ.
-• Form: Main App Window (Cửa sổ chính)
-  o Logic trong MainAppWindow.xaml.cs sẽ ẩn các menu không thuộc phạm vi công việc.
-  o Các mục menu "Quản lý Nhân viên" và "Quản lý Vai trò" sẽ bị ẩn đi, người dùng
-  không thể truy cập.
-• Form: Product / Category Management Page (Trang Quản lý Sản phẩm / Danh mục)
-  o Logic SetupPermissions trên các trang này xác định roleName là "sales" và chuyển
-  giao diện sang chế độ chỉ đọc (read-only).
-  o Chi tiết:
-    ▪ Xem: Có thể tải và xem toàn bộ danh sách sản phẩm/danh mục.
-    ▪ Hạn chế: Toàn bộ các ô nhập liệu sẽ bị vô hiệu hóa (màu xám, không thể nhập
-    chữ). Các nút "Lưu" và "Xóa" cũng bị vô hiệu hóa, không thể nhấn được. Người
-    dùng chỉ có thể xem thông tin.
-• Form: Customer Management Page (Trang Quản lý Khách hàng)
-  o Đây là form nghiệp vụ chính của Sales, logic phân quyền (roleName == "sales") cấp
-  toàn quyền.
-  o Có đầy đủ quyền Xem, Thêm khách hàng mới, Sửa thông tin và Xóa khách hàng.
+Features of roles in Visual Studio program
+
+1. Role: Admin
+As the highest role, Admin has full access and operation rights on all interfaces of the system.
+
+• Form: Main App Window
+  o When logging in as Admin, no function menu is hidden. Users can see and access all modules from the menu bar.
+
+  o All menu items such as "Dashboard", "Sales", "Product Management", "Customer Management", "Order Management", "Employee Management", "Role Management" are displayed and active.
+
+• Form: Dashboard Page
+  o Admin has the right to view all summary data.
+
+  o View all 4 KPI index boxes, 7-day revenue chart, and list of 5 best-selling products.
+• Form: Product Management Page
+  o The logic in the code (SetupPermissions) defines the roleName as "admin" and grants full permissions.
+  o Details:
+     View: Load and view the entire product list in the DataGrid.
+     Add/Edit: All input fields (Product Code, Product Name, Selling Price, Cost Price, Inventory, Description, Category) are in the state where data entry is allowed.
+     Action: The "Save", "Delete", "Clear" buttons are all active, allowing full Add, Edit, Delete operations.
+• Form: Category Management Page
+  o Similar to the product page, Admin has full management rights.
+  o Can View, Add new, Edit name and Delete product categories.
+• Form: Customer Management Page
+  o The authorization logic allows the Admin to perform all operations.
+  o Full rights to View, Add, Edit, Delete information of all customers in the system.
+
+• Form: Create Order Window
+  o Can be accessed from the menu and performs full sales functions.
+  o Search for products, add products to the cart, select customers from the list (or leave blank for individual customers), and click "Save" to complete the order.
+
+• Form: Order Management Page
+  o Access and view the entire transaction history of the system.
+  o View a list of all orders, use filters by date, and double-click an order to open the "Order Details" window.
+
+• Form: Employee Management Page
+  o This is a privileged function of the Admin, allowing management of all user accounts.
+  o Details:
+     View: See a list of all employees and their corresponding roles.
+     Add: Create a new employee account with a default password.
+     Edit: Edit all employee information, most importantly, you can change their role (reassign permissions).
+     Delete: Delete the employee account from the system.
+• Form: Role Management Page
+  o This interface is for reference only, listing pre-defined roles.
+  o Only has the function of Viewing the list of roles (Admin, Sales, Warehouse).
+2. Role: Sales
+This role focuses on sales operations, so the maximum authority is granted to related forms and limited to internal management forms.
+• Form: Main App Window
+  o The logic in MainAppWindow.xaml.cs will hide menus that are not within the scope of work.
+  o The "Employee Management" and "Role Management" menu items will be hidden and inaccessible to users.
+
+• Form: Product / Category Management Page
+  o The SetupPermissions logic on these pages defines the roleName as "sales" and switches the interface to read-only mode.
+
+  o Details:
+     View: Can load and view the entire product/category list.
+     Limitations: All input fields will be disabled (gray, cannot enter text). The "Save" and "Delete" buttons are also disabled and cannot be clicked. Users can only view information.
+• Form: Customer Management Page
+  o This is the main business form of Sales, the permission logic (roleName == "sales") grants full permissions.
+  o Has full permissions to View, Add new customers, Edit information and Delete customers.
 • Form: Create Order Window & Order Management Page
-  o Sales có toàn quyền trên các form này để thực hiện công việc bán hàng.
-  o Có thể tạo đơn hàng mới, xem lại lịch sử đơn hàng và lọc đơn hàng như Admin.
+  o Sales has full authority over these forms to perform sales work.
+  o Can create new orders, review order history and filter orders like Admin.
+
 • Form: Employee / Role Management Page
-  o Không thể truy cập.
-  o Do menu đã bị ẩn ở cửa sổ chính, người dùng không có cách nào để điều hướng đến
-  các trang này.
-3. Vai trò: Warehouse (Nhân viên Kho)
-Vai trò này chịu trách nhiệm hoàn toàn về hàng hóa trong kho, do đó được cấp quyền tối đa
-trên các form liên quan đến sản phẩm và bị chặn khỏi các form bán hàng/khách hàng.
-• Form: Main App Window (Cửa sổ chính)
-  o Đây là vai trò bị giới hạn nhiều nhất ở cấp độ menu.
-  o Các mục menu sau sẽ bị ẩn đi: "Tạo Đơn Hàng", "Quản lý Khách hàng", "Quản lý Đơn
-  hàng", "Quản lý Nhân viên", "Quản lý Vai trò".
-• Form: Product / Category Management Page (Trang Quản lý Sản phẩm / Danh mục)
-  o Đây là các form làm việc chính của Warehouse. Logic SetupPermissions (roleName ==
-  "warehouse") cấp toàn quyền.
-  o Có đầy đủ quyền Xem, Thêm, Sửa, Xóa sản phẩm và danh mục. Thao tác quan trọng
-  nhất là cập nhật số lượng tồn kho, giá vốn.
-• Form: Các form bị chặn truy cập
-  o Do các menu tương ứng đã bị ẩn, người dùng Warehouse không thể truy cập các
-  form sau:
-    ▪ Create Order Window
-    ▪ Customer Management Page
-    ▪ Order Management Page
-    ▪ Employee Management Page
-    ▪ Role Management Page
-    • Form: Dashboard Page
-  o Vẫn có quyền truy cập để xem tình hình chung.
-  o Có thể xem các KPI, biểu đồ doanh thu và sản phẩm bán chạy.
+  o Cannot be accessed.
+  o Since the menu is hidden in the main window, users have no way to navigate to these pages.
+
+3. Role: Warehouse
+This role is fully responsible for the goods in the warehouse, so it is granted maximum authority over product-related forms and is blocked from sales/customer forms.
+
+• Form: Main App Window
+  o This is the most restricted role at the menu level.
+
+  o The following menu items will be hidden: "Create Order", "Customer Management", "Order Management", "Employee Management", "Role Management".
+• Form: Product / Category Management Page
+  o These are the main working forms of Warehouse. Logic SetupPermissions (roleName == "warehouse") grants full permissions.
+  o Has full permissions to View, Add, Edit, Delete products and categories. The most important operations are updating inventory quantity and cost price.
+• Form: Forms Access is blocked
+  o Due to the respective menus being hidden, Warehouse users cannot access the following forms:
+    	Create Order Window
+    	Customer Management Page
+    	Order Management Page
+    	Employee Management Page
+    	Role Management Page
+• Form: Dashboard Page
+  o Still have access to view the overall situation.
+  o Can view KPIs, revenue charts and best-selling products.
