@@ -55,14 +55,14 @@ namespace WpfLoginProjects
             string roleName = LoggedInEmployee.RoleName.ToLower();
 
             // Admin và Warehouse có toàn quyền, Sales chỉ được xem
-            if (roleName == "admin" || roleName == "warehouse")
+            if (roleName == "admin" || roleName == "warehouse" || roleName == "sales")
             {
                 SetControlsEnabled(true);
             }
-            else // Bao gồm cả Sales và các vai trò khác
-            {
-                SetControlsEnabled(false);
-            }
+            //else // Bao gồm cả Sales và các vai trò khác
+            //{
+               // SetControlsEnabled(false);
+            //}
         }
 
         // **THAY ĐỔI 5: Tạo hàm tiện ích để bật/tắt các control**
